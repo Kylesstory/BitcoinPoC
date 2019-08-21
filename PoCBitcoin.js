@@ -234,7 +234,6 @@ class Block {
         // 4. Verify the validation of the digital signature.
         
     }
-
 }
 
 class Blockchain{

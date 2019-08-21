@@ -255,7 +255,6 @@ class Block {
     	const user = users[this.verifier];
     	return user.key.verify(this.toString(), this.signature);
     }
-
 }
 
 class Blockchain{
@@ -309,6 +308,7 @@ class Blockchain{
 					// 1-3-3. record the transaction on the blockchain
 					txs[tx.hash] = tx; // record the transaction
 				}
+				// 1-4. deal with the block
 				// 1-4-1. the blockchain pays block award to the block verifier
 				pay(admin.address, block.verifier, this.reward); // the admin pays the mining reward to the block verifier
 		    	// 1-4-2. add the block to the blockchain

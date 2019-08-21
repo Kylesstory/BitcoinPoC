@@ -266,8 +266,24 @@ class Blockchain{
         // [ Write code here ] 
 
         // 1. verify the validity of the block
+            
+            // 1-1. verify the validity of all transactions
+            
+            // 1-2. if all transactions are verified valid, deal with the payment
+            
+            // 1-3. for each payment
+                
+                // 1-3-1. pay amount to tx.to
+                
+                // 1-3-2. pay tip to the block verifyer
 
-        // 2. deal with the transactions
+                // 1-3-3. record the transaction on the blockchain
+
+            // 1-4. deal with the block
+
+                // 1-4-1. the blockchain pays block award to the block verifier
+
+                // 1-4-2. add the block to the blockchain
     }
 
     verifyAllBlocks() { // to verify all blocks of the chain

@@ -17,7 +17,7 @@ let admin, exchange, blockchain, height = 1;
 const capability = 3;
 // Warn. The capability that each block may contain is dynamic is Bitcoin.
 // Here it is simplified as a fixed number 3.
-const customers = ['User1', 'User2', 'User3', 'User4'];
+const customers = ['User 1', 'User 2', 'User 3', 'User 4'];
 // edit the customers variable to create your customized users
 
 // general functions
@@ -33,12 +33,12 @@ function createUser(name){ // to create a whole new user
     while(name.length < 10){ // for alignment
         name = ' ' + name;
     }
-    const user = new User(name);
+    const user = new User();
+    // Warn! name doesn't exist in Bitcoin, it is for easily distinguishable here.
+    user.name = name;
     // Warn! balance in Bitcoin is composed of UTXOs, which is much more complex;
     // this is a simplified version for proof of concept
     user.balance = 0; // set the balanace
-    users[user.address] = user;
-    addresses.push(user.address);
     // the exchange gives customers 50 Bitcoins in the beginning
     if (name !== '     Admin' && name !== '  Exchange'){
         exchange.transfer(user.address, 50, 1);
@@ -112,99 +112,22 @@ function pay(from, to, amount){ // an easy way for transaction, Bitcoin doesn't 
 
 // objects for Bitcoin PoC
 
-class Block {
-    constructor(timestamp, data, previousHash, nonce) { // to build a block
-        this.timestamp = timestamp;
-        this.data = data;
-        this.previousHash = previousHash;
-        this.nonce = nonce;
-        this.hash = shortHash(this.toHashString());
-        this.signature = '';
-    }
-    
-    toHashString(){ // to make a block described in a string (exclude signature)
-        return this.timestamp + this.data + this.previousHash + this.nonce ;
-    }
-
-    toString(){ // to make a block described in a string (include signature)
-        return JSON.stringify({'height': this.height, 'timestamp': this.timestamp, 'data': this.data, 'previousHash': this.previousHash, 'nonce': this.nonce, 'blockHash': this.hash, 'signature': this.signature});
-    }
-
-    challenge(){ // if the hash value begins with two (defined by varible 'blockchain.difficulty') 0s
-        const binary = hexToBinary(this.hash);
-        // [ Write code here ] 
-
-        // To ensure the found 'nonce' satisfy the puzzle challenge 
-        // of Bitcoin proof of work with 'difficulty'.
-        return false;
-    }
-
-    verify(){ // to verify a single block
-        // [ Write code here ] 
-
-        // To make sure the block is valid.
-        
-        // 1. Ensure 'this.signature' has been filled by some verifier.
-
-        // 2. Ensure 'this.hash' has been correctly computed. 
-        //    This step makes sure the block data hasn't been modified.
-        
-        // 3. Ensure the found 'this.nonce' in this block satisfies the Bitcoin puzzle.
-
-        // 4. Verify the validation of the digital signature.
-        
-        return false;
-    }
-
-}
-
-class Transaction {
-    constructor(from, to, amount, tip){ // to build a transaction
-        this.from = from;
-        this.to = to;
-        this.amount = amount;
-        this.tip = tip;
-        if (this.tip <= 0) {
-            this.tip = this.amount / 10000;
-        }
-        this.hash = shortHash(this.toHashString);
-        this.signature = '';
-    }
-
-    toHashString(){ // to describe the transaction in a string (exclude signature)
-        return this.from + this.to + this.amount + this.tip;
-    }
-
-    toString(){ // to describe the transaction in a string (include signature)
-        return JSON.stringify({'from': this.from, 'to': this.to, 'amount': this.amount, 'tip': this.tip, 'txHash': this.hash, 'signature': this.signature});
-    }
-
-    verify(){ // to verify a transaction
-        // [ Write code here ] 
-
-        // To make sure the transaction is valid.
-        
-        // 1. Ensure 'this.signature' has been filled by some verifier.
-
-        // 2. Verify the validation of the digital signature.
-    }
-}
-
 class User {
     constructor(name){ // to create a new user with name, secret key, public key, address and balance
-        // P.S. name doesn't exist in Bitcoin, it is for easily distinguishable here.
-        this.name = name
-        // create public key and secret key
-        this.key = ec.genKeyPair();
+        // [ Write code here ] 
+
+        // 1. create public key and secret key
+
         // Note. In Bitcoin and Etherum, there are mechanisms to avoid secret key losing.
         // In Bitcoin improvement proposal 39, their is a technique called mnemonic which
         // encodes the secret key into English words, users can write it down as the cold storage of secret key.
         // Still that sentence, we omit it for clear.
-        const publicKey = this.key.getPublic();
         
-        // [ Write code here ] 
+        // 2. compute the address
+        // Hint! This is a simplified version of address.
+                
+        // 3. register the address to the blockchain
 
-        // To set 'this.address' as the result of a shortHash function and the public key
     }
 
     transfer(to, amount, tip){ // to transfer money to someone
@@ -229,7 +152,7 @@ class User {
 
 
         // 2. pick several transactions (defined by variable 'capability')  
-        // Warning. Bitcoin deals with transactions using Merkle tree data structure.
+        // Hint. Bitcoin deals with transactions using Merkle tree data structure.
         // In this PoC case, merkle tree is omitted for easy understanding.
         
         // 3. collect the hash value of previous block
@@ -241,6 +164,77 @@ class User {
         // 6. add the block using 'blockchain.addblock()' 
         
     }
+}
+
+class Transaction {
+    constructor(from, to, amount, tip){ // to build a transaction
+        this.from = from;
+        this.to = to;
+        this.amount = amount;
+        this.tip = tip;
+        if (this.tip <= 0) {
+            this.tip = this.amount / 10000;
+        }
+        this.signature = '';
+    }
+
+    toString(){ // to describe the transaction in a string (exclude signature)
+        return this.from + this.to + this.amount + this.tip;
+    }
+
+    toJSONString(){ // to describe the transaction in a string (include signature)
+        return JSON.stringify({'from': this.from, 'to': this.to, 'amount': this.amount, 'tip': this.tip, 'txHash': this.hash, 'signature': this.signature});
+    }
+
+    verify(){ // to verify a transaction
+        // [ Write code here ] 
+
+        // To make sure the transaction is valid.
+        
+        // 1. Ensure 'this.signature' has been filled by some verifier.
+
+        // 2. Verify the validation of the digital signature.
+    }
+}
+
+class Block {
+    constructor(timestamp, data, previousHash, nonce) { // to build a block
+        this.timestamp = timestamp;
+        this.data = data;
+        this.previousHash = previousHash;
+        this.nonce = nonce;
+        this.hash = shortHash(this.toHashString());
+        this.signature = '';
+    }
+    
+    toString(){ // to make a block described in a string (exclude signature)
+        return this.timestamp + this.data + this.previousHash + this.nonce ;
+    }
+
+    challenge(){ // if the hash value begins with three (defined by varible 'blockchain.difficulty') 0s
+        const binary = hexToBinary(this.hash);
+        // [ Write code here ] 
+
+        // To ensure the found 'nonce' satisfy the puzzle challenge 
+        // of Bitcoin proof of work with 'difficulty'.
+    }
+
+    verify(){ // to verify a single block
+        // [ Write code here ] 
+
+        // To make sure the block is valid.
+        
+        // 1. Ensure 'this.signature' has been filled by some verifier.
+
+        // 2. Ensure 'this.hash' has been correctly computed. 
+        //    This step makes sure the block data hasn't been modified.
+        
+        // 3. Ensure the found 'this.nonce' in this block satisfies the Bitcoin puzzle.
+
+        // 4. Verify the validation of the digital signature.
+        
+    }
+
 }
 
 class Blockchain{
@@ -280,7 +274,7 @@ class Blockchain{
         
         // [ Write code here ] 
 
-        // 1. write a loop to verify all blocks
+        // 1. for each block
 
         // 1-1. make sure the hash value of each block is kept in the next block
 
@@ -297,6 +291,7 @@ admin = createUser('Admin');
 // only this one is cheated; other's Bitcoin should be obtained by transactions. 
 users[admin.address]['balance'] = 15000000
 // create a blockchain object with the difficulty = 3, and mining reward = 50
+// Warn. the official mining reward is set to 50 and it reduces to half every 4 years, not a fixed value.
 blockchain = new Blockchain(3, 50);
 // initialize the exchange and it's initialize amount
 exchange = createUser('Exchange');
@@ -311,14 +306,12 @@ for (let i = 0; i < customers.length; i++){
 while(true){ 
     // randomly generate some transactions
     generateRandomTxs(50);
-
     // mining
     while(unpackagedTxs.length > 0){
         const i = getRandomInt(addresses.length - 2) + 2;
-        const address = addresses[i];
-        users[address].mine();
+        users[addresses[i]].mine();
     }
-    // listUsers();
+    listUsers();
     // listUnpackagedTxs();
 }
 // listBlocks('all');

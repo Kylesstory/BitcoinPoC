@@ -295,23 +295,14 @@ class Blockchain{
         // 1. verify the validity of the block
     	if (block.verify()){
     		const txs = JSON.parse(block.data);
-    		let allValid = true;
-    		for (let i = 0; i < txs.length; i++){ // for all txs in block
-    			if (! txs[i].valid()){
-    				allValid = false;
-    				break;
-    			}
+			for (let i = 0; i < txs.length; i++){ // for all txs in block
+    			const tx = txs[i];
+    			pay(tx.from, tx.to, tx.amount); // pay amount to someone
+    			pay(tx.from, block.verifier, tx.tip); // pay tip to the block verifyer
+    			txs[tx.hash] = tx; // record the transaction
     		}
-    		if (allValid){
-    			for (let i = 0; i < txs.length; i++){ // for all txs in block
-	    			const tx = txs[i];
-	    			pay(tx.from, tx.to, tx.amount); // pay amount to someone
-	    			pay(tx.from, block.verifier, tx.tip); // pay tip to the block verifyer
-	    			txs[tx.hash] = tx; // record the transaction
-	    		}
-	    		pay(admin.address, block.verifier, this.reward); // the admin pays the mining reward to the block verifier
-	        	this.chain.push(block);
-    		}
+    		pay(admin.address, block.verifier, this.reward); // the admin pays the mining reward to the block verifier
+        	this.chain.push(block);
     	} else{
 			console.log('Invalid block.')
     	}

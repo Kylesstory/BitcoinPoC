@@ -144,7 +144,7 @@ class User {
         // This is the proof of work, keep trying different nonces until satisfying the block challenge (puzzle)
 		
 		// 1. collect the timestamp
-		const timestamp = new Date()
+		const timestamp = new Date();
         // 2. pick several transactions (defined by variable 'capability')  
 		// Warning. Bitcoin deals with transactions using Merkle tree data structure.
 		// In this PoC case, merkle tree is omitted for easy understanding.
@@ -187,10 +187,6 @@ class Transaction {
 
 	toString(){ // to describe the transaction in a string (exclude signature)
 		return this.from + this.to + this.amount + this.tip;
-	}
-
-	toJSONString(){ // to describe the transaction in a string (include signature)
-		return JSON.stringify({'from': this.from, 'to': this.to, 'amount': this.amount, 'tip': this.tip, 'txHash': this.hash, 'signature': this.signature});
 	}
 
 	verify(){

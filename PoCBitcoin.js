@@ -113,7 +113,7 @@ function pay(from, to, amount){ // an easy way for transaction, Bitcoin doesn't 
 // objects for Bitcoin PoC
 
 class User {
-    constructor(name){ // to create a new user with name, secret key, public key, address and balance
+    constructor(){ // to create a new user with name, secret key, public key, address and balance
         // [ Write code here ] 
 
         // 1. create public key and secret key
@@ -148,7 +148,7 @@ class User {
         // [ Write code here ] 
 
         // 1. collect the timestamp
-        // const timestamp = new Date()
+        // const timestamp = new Date();
 
 
         // 2. pick several transactions (defined by variable 'capability')  
@@ -182,10 +182,6 @@ class Transaction {
         return this.from + this.to + this.amount + this.tip;
     }
 
-    toJSONString(){ // to describe the transaction in a string (include signature)
-        return JSON.stringify({'from': this.from, 'to': this.to, 'amount': this.amount, 'tip': this.tip, 'txHash': this.hash, 'signature': this.signature});
-    }
-
     verify(){ // to verify a transaction
         // [ Write code here ] 
 
@@ -203,7 +199,7 @@ class Block {
         this.data = data;
         this.previousHash = previousHash;
         this.nonce = nonce;
-        this.hash = shortHash(this.toHashString());
+        this.hash = shortHash(this.toString());
         this.signature = '';
     }
     
@@ -211,7 +207,7 @@ class Block {
         return this.timestamp + this.data + this.previousHash + this.nonce ;
     }
 
-    challenge(){ // if the hash value begins with three (defined by varible 'blockchain.difficulty') 0s
+    challenge(){ // if the hash value begins with three (defined by variable 'blockchain.difficulty') 0s
         const binary = hexToBinary(this.hash);
         // [ Write code here ] 
 
@@ -251,7 +247,7 @@ class Blockchain{
         // rewrite a beautiful genesis block
         const genesis = new Block(new Date(), "Bitcoin proof of concept", "819fab60d0b8e5d5", "nonce");
         genesis.height = 0;
-        genesis.signature = admin.key.sign(genesis.toHashString());
+        genesis.signature = admin.key.sign(genesis.toString());
         return genesis;
     }
 

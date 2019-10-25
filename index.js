@@ -15,23 +15,21 @@ function print(header, data){
 	console.log('\x1b[0m}\n')
 }
 
-//// main entrance
-/// initialize the blockchain
-const satoshi = User.Satoshi();
-const blockchain = satoshi.blockchain;
-const users = [];
-let user, ulength = 0;
-for(let i = 0; i < 5; i++){ // create 5 users
-	user = new User(blockchain);
-	satoshi.transfer(user.address, randomInt(10) + 40, 0.01);
-	users.push(user);
-	ulength += 1
+function init(userNumber){ // initialize the blockchain
+	const satoshi = User.Satoshi();
+	const blockchain = satoshi.blockchain;
+	const users = [];
+	for(let i = 0; i < userNumber; i++){ // create [userNumber] users
+		let user = new User(blockchain);
+		satoshi.transfer(user.address, randomInt(10) + 40, 0.01);
+		users.push(user);
+	}
+	users[randomInt(userNumber)].mine();
+	return users;
 }
-users[randomInt(ulength)].mine();
 
-while (true){ // flip a dice to decide the next action
-	user = users[randomInt(ulength)];
-	action = randomInt(100);
+function run(user, action){
+	blockchain = user.blockchain;
 	if (action < 77){ // transfer
 		to = users[randomInt(users.length)].address;
 		amount = randomInt(30) + 1;
@@ -48,6 +46,15 @@ while (true){ // flip a dice to decide the next action
 		print('Balances', data);
 	} else if (action < 95){ // print settings
 		const data = [['Block height', blockchain.height], ['PoW difficulty', blockchain.difficulty], ['Current reward', blockchain.reward]];
-		print('Settings', data);
+		print('Stats', data);
 	}
+}
+
+// main entrance
+const userNumber = 5;
+const users = init(userNumber);
+while (true){ // flip a dice to decide the next action
+	user = users[randomInt(userNumber)];
+	action = randomInt(100);
+	run(user, action);
 }

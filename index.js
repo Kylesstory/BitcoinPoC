@@ -53,6 +53,7 @@ function run(user, action){
 // main entrance
 const userNumber = 5;
 const users = init(userNumber);
+let user, action;
 while (true){ // flip a dice to decide the next action
 	user = users[randomInt(userNumber)];
 	action = randomInt(100);

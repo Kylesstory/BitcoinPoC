@@ -10,7 +10,7 @@ function randomInt(max) { // return an integer between from 0 to max -1
 function print(header, data){
 	console.log('\x1b[0m%s {', header);
 	for(let i = 0; i < data.length; i++){
-		console.log('  %s: \x1b[33m%s%s', data[i][0], data[i][1], ((i === data.length -1) ? '' : '\x1b[0m,'));
+		console.log('  %s: \x1b[33m%s\x1b[0m%s', data[i][0], data[i][1], ((i === data.length -1) ? '' : ','));
 	}
 	console.log('\x1b[0m}\n')
 }
@@ -44,7 +44,7 @@ function run(user, action){
 			data.push([users[i].address, balances[users[i].address] / 100000000]);
 		}
 		print('Balances', data);
-	} else if (action < 95){ // print settings
+	} else if (action < 95){ // print stats
 		const data = [['Block height', blockchain.height], ['PoW difficulty', blockchain.difficulty], ['Current reward', blockchain.reward]];
 		print('Stats', data);
 	}

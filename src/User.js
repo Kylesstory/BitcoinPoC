@@ -33,6 +33,7 @@ class User {
 		
 		// 2. compute the address
 		this.address = utils.publicToAddress(this.key.getPublic('hex'));
+		console.log(this.address)
 		// 3. download the blockchain from others
 		this.blockchain = blockchain;
 	}

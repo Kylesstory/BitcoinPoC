@@ -2,7 +2,6 @@ const cryptojs = require('crypto-js')
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
 const UTXO = require('./UTXO');
-const ripemd160 = require('ripemd160');
 const base58 = require('bs58');
 
 function adjustUTXOs(utxos, tx, miner){ // to generate UTXOs from the transaction
@@ -94,7 +93,7 @@ function merkleRoot(data){
 function publicToAddress(public){
 	// from https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses
 	const hashPK = sha256(public)
-	const ripemd = '00' + (new ripemd160().update(Buffer.from(hashPK, 'hex')).digest().toString('hex'));
+	const ripemd = '00' + cryptojs.RIPEMD160(hashPK).toString();
 	const checksum = sha256(sha256(ripemd)).substring(0, 8); // sha256 third times
 	return base58.encode(Buffer.from(ripemd + checksum, 'hex'));
 }

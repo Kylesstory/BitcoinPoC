@@ -92,9 +92,8 @@ function merkleRoot(data){
 
 function publicToAddress(public){
 	// from https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses
-	const hashPK = sha256(public)
-	const ripemd = '00' + cryptojs.RIPEMD160(hashPK).toString();
-	const checksum = sha256(sha256(ripemd)).substring(0, 8); // sha256 third times
+	const ripemd = '00' + cryptojs.RIPEMD160(sha256(public)).toString(); // '00' means the main chain
+	const checksum = sha256(sha256(ripemd)).substring(0, 8);
 	return base58.encode(Buffer.from(ripemd + checksum, 'hex'));
 }
 

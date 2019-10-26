@@ -7,6 +7,4 @@ Clone the project to the local repository and build.
 	cd ./BitcoinPoC/
 	npm install
 
-Then, the detail step-to-step instruction is available here.
-
-https://medium.com/@kylehuang_96433/a-simplified-poc-for-bitcoin-8bb2db549c32
+Then, the detail step-to-step instruction will be available here.

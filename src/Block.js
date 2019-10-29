@@ -5,7 +5,7 @@ const hexToBinary = require('hex-to-binary');
 
 class Block {
     static genesis(tx){ // to return the genesis block
-        const nonce = {'blockSize': 1000, 'interval': 2000, 'reward': 50, 'half': 21}; 
+        const nonce = {'blockSize': 1000, 'interval': 2000, 'reward': 50, 'half': 21, 'adjust': 2, 'bias': 1}; 
         return new Block([tx], utils.sha256(nonce), utils.merkleRoot([tx]), 1, 8, nonce);
     }
 

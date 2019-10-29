@@ -11,6 +11,8 @@ class Blockchain{
         this.interval = settings.interval; // The real interval is set to 10 minutes, we use 2 seconds here.
         this.reward = settings.reward; // set initial mining reward
         this.half = settings.half; // The real reward is reduced to half every 210000 blocks, we use 21 here.
+        this.adjust = settings.adjust; // The difficulty is adjusted every 2016 blocks, we use 2 here.
+        this.bias = settings.bias; // The received UTXO could be spent after 100 blocks, we use 1 here.
         this.height = genesis.height;
         this.difficulty = genesis.difficulty; // the mining difficulty related to the time interval
         this.uTxs = [];
@@ -44,8 +46,10 @@ class Blockchain{
         } else{ // all transactions are verified valid, deal with the payment
             const blockHash = utils.sha256(block);
             // 2-1. modify the difficulty by the time interval
-            const diff = block.header.timestamp.getTime() - this.last().header.timestamp.getTime();
-            this.difficulty = diff < this.interval ? this.difficulty + 1 : Math.max(this.difficulty - 1, 4)
+            if (((block.height % this.adjust) === 1) && (block.height > this.adjust)){
+                const diff = block.header.timestamp.getTime() - this.chain[block.height - this.adjust].header.timestamp.getTime();
+                this.difficulty = diff < (this.interval * this.adjust) ? this.difficulty + 1 : Math.max(this.difficulty - 1, 4)
+            }
             // 2-2. increase the block height
             this.height += 1;
             // 2-3. delete packaged txs from uTxs

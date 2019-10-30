@@ -5,15 +5,16 @@ const hexToBinary = require('hex-to-binary');
 
 class Block {
     static genesis(tx){ // to return the genesis block
-        const nonce = {'blockSize': 1000, 'interval': 2000, 'reward': 50, 'half': 21, 'adjust': 2, 'bias': 1}; 
-        return new Block([tx], utils.sha256(nonce), utils.merkleRoot([tx]), 1, 8, nonce);
+        const nonce = {'blockSize': 1000, 'interval': 2000, 'half': 21, 'adjust': 2, 'offset': 1}; 
+        return new Block([tx], utils.sha256(nonce), utils.merkleRoot([tx]), 0, 8, 50, nonce);
     }
 
-    constructor(transactions, previousHash, merkleRoot, height, difficulty, nonce) { // to build a block
+    constructor(transactions, previousHash, merkleRoot, height, difficulty, reward, nonce) { // to build a block
         this.header = new BlockHeader(previousHash, merkleRoot, nonce);
         this.transactions = transactions;
         this.height = height;
         this.difficulty = difficulty;
+        this.reward = reward;
         this.signature = null; // these two lines remind coders to sign the block afterward
         this.signer = null;
     }
@@ -28,7 +29,7 @@ class Block {
 	}
 
     toString(){
-        return this.header.toString() + this.transactions.map(x => x.toSting()).reduce((x, y) => x.concat(y)) + this.height + this.difficulty + this.signer + this.signature ;
+        return this.header.toString() + this.height + this.difficulty + this.reward + this.signer + this.signature;
     }
 
     verify(previousHash){ // to verify a single block

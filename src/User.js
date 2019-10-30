@@ -72,7 +72,7 @@ class User {
         	const merkleRoot = utils.merkleRoot(txs);
 			while (true){ // trying different nonces to satisfy the challenge
 				nonce = crypto.randomBytes(32).toString('hex');
-				block = new Block(txs, previousHash, merkleRoot, this.blockchain.height, this.blockchain.difficulty, nonce);
+				block = new Block(txs, previousHash, merkleRoot, this.blockchain.height, this.blockchain.difficulty, this.blockchain.reward, nonce);
 				if (block.puzzleFixed()){
 					break;
 				}

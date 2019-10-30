@@ -8,13 +8,13 @@ class Blockchain{
         this.chain = [genesis]; // to build a block list
         const settings = genesis.header.nonce; // several settings were defined in the first block, called genesis block
 		this.blockSize = settings.blockSize; // set the block size
-        this.interval = settings.interval; // The real interval is set to 10 minutes, we use 2 seconds here.
-        this.reward = settings.reward; // set initial mining reward
         this.half = settings.half; // The real reward is reduced to half every 210000 blocks, we use 21 here.
         this.adjust = settings.adjust; // The difficulty is adjusted every 2016 blocks, we use 2 here.
-        this.bias = settings.bias; // The received UTXO could be spent after 100 blocks, we use 1 here.
-        this.height = genesis.height;
+        this.interval = settings.interval * settings.adjust; // The real interval is set to 10 minutes per block, we use 2 seconds per block here.
+        this.offset = settings.offset; // The received UTXO could be spent after 100 blocks, we use 1 here.
+        this.height = genesis.height + 1;
         this.difficulty = genesis.difficulty; // the mining difficulty related to the time interval
+        this.reward = genesis.reward; // set initial mining reward
         this.uTxs = [];
         this.utxos = [];
         this.txs = {};
@@ -46,9 +46,9 @@ class Blockchain{
         } else{ // all transactions are verified valid, deal with the payment
             const blockHash = utils.sha256(block);
             // 2-1. modify the difficulty by the time interval
-            if (((block.height % this.adjust) === 1) && (block.height > this.adjust)){
+            if ((block.height % this.adjust) === 0){
                 const diff = block.header.timestamp.getTime() - this.chain[block.height - this.adjust].header.timestamp.getTime();
-                this.difficulty = diff < (this.interval * this.adjust) ? this.difficulty + 1 : Math.max(this.difficulty - 1, 4)
+                this.difficulty = diff < this.interval ? this.difficulty + 1 : Math.max(this.difficulty - 1, 4)
             }
             // 2-2. increase the block height
             this.height += 1;

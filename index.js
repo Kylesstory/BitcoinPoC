@@ -45,7 +45,7 @@ function run(user, action){
 		}
 		print('Balances', data);
 	} else if (action < 95){ // print stats
-		const data = [['Block height', blockchain.height], ['PoW difficulty', blockchain.difficulty], ['Current reward', blockchain.reward]];
+		const data = [['Block height', blockchain.height - 1], ['PoW difficulty', blockchain.difficulty], ['Current reward', blockchain.reward]];
 		print('Stats', data);
 	}
 }
